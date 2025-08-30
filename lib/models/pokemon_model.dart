@@ -8,7 +8,6 @@ class PokemonListing {
     return PokemonListing(name: json['name'], url: json['url']);
   }
 
-  // Extrai o ID do Pokémon da URL para obter a imagem.
   String get imageUrl {
     final id = url.split('/')[6];
     return '[https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png](https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png)';
