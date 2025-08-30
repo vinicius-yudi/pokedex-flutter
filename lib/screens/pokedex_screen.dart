@@ -70,14 +70,14 @@ class _PokedexScreenState extends State<PokedexScreen> {
   void _searchPokemon() async {
     final query = _searchController.text.trim();
     if (query.isEmpty) return;
-    
+
     setState(() => _isSearching = true);
-    
+
     try {
       final pokemonDetail = await _apiService.searchPokemon(query);
       final pokemonListing = PokemonListing(
         name: pokemonDetail.name,
-        url: 'https://pokeapi.co/api/v2/pokemon/${pokemonDetail.id}/'
+        url: 'https://pokeapi.co/api/v2/pokemon/${pokemonDetail.id}/',
       );
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -85,9 +85,9 @@ class _PokedexScreenState extends State<PokedexScreen> {
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro: ${e.toString()}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro: ${e.toString()}')));
     } finally {
       setState(() => _isSearching = false);
     }
@@ -103,7 +103,9 @@ class _PokedexScreenState extends State<PokedexScreen> {
             icon: const Icon(Icons.favorite),
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+                MaterialPageRoute(
+                  builder: (context) => const FavoritesScreen(),
+                ),
               );
             },
           ),
@@ -135,15 +137,16 @@ class _PokedexScreenState extends State<PokedexScreen> {
                         onPressed: _searchPokemon,
                         child: const Text('Buscar'),
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16)
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
                         ),
                       ),
               ],
             ),
           ),
-          Expanded(
-            child: _buildContent(),
-          ),
+          Expanded(child: _buildContent()),
         ],
       ),
     );

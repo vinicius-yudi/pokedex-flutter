@@ -18,12 +18,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Pokédex Explorer',
         theme: ThemeData(
-          primarySwatch: Colors.red,
+          primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           brightness: Brightness.light,
           scaffoldBackgroundColor: Colors.grey[100],
           appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.blue,
             foregroundColor: Colors.white,
             elevation: 4,
             titleTextStyle: TextStyle(
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),

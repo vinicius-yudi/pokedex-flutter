@@ -70,13 +70,18 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
                   height: 250,
                   fit: BoxFit.contain,
                   loadingBuilder: (context, child, progress) {
-                    return progress == null ? child : const CircularProgressIndicator();
+                    return progress == null
+                        ? child
+                        : const CircularProgressIndicator();
                   },
                 ),
                 const SizedBox(height: 20),
                 Text(
                   '#${detail.id} - ${detail.name.toUpperCase()}',
-                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 _buildInfoCard(context, detail),
@@ -115,7 +120,10 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           Text(value, style: const TextStyle(fontSize: 18)),
         ],
       ),

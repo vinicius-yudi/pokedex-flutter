@@ -1,3 +1,7 @@
+// lib/models/pokemon_model.dart
+// Define as classes Dart que representam os dados da API.
+// Inclui a lógica para converter JSON em objetos Dart.
+
 class PokemonListing {
   final String name;
   final String url;
@@ -8,9 +12,12 @@ class PokemonListing {
     return PokemonListing(name: json['name'], url: json['url']);
   }
 
+  // Extrai o ID do Pokémon da URL para obter a imagem.
   String get imageUrl {
-    final id = url.split('/')[6];
-    return '[https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png](https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png)';
+    // CORREÇÃO: A URL termina com uma barra, então o ID está na penúltima posição.
+    final uriParts = url.split('/').where((part) => part.isNotEmpty).toList();
+    final id = uriParts.last;
+    return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png';
   }
 }
 
@@ -34,12 +41,21 @@ class PokemonDetail {
   });
 
   factory PokemonDetail.fromJson(Map<String, dynamic> json) {
+    // Garante que a imagem principal seja a oficial "dream world" se disponível, senão a padrão.
+    final sprites = json['sprites'];
+    String primaryImage = sprites['front_default'];
+    if (sprites['other'] != null &&
+        sprites['other']['official-artwork'] != null) {
+      primaryImage =
+          sprites['other']['official-artwork']['front_default'] ?? primaryImage;
+    }
+
     return PokemonDetail(
       id: json['id'],
       name: json['name'],
       height: json['height'],
       weight: json['weight'],
-      imageUrl: json['sprites']['front_default'],
+      imageUrl: primaryImage,
       types: (json['types'] as List)
           .map((typeInfo) => typeInfo['type']['name'] as String)
           .toList(),

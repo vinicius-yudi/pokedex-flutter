@@ -14,9 +14,7 @@ class FavoritesScreen extends StatelessWidget {
     final favoritePokemons = favoritesProvider.favorites;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Meus Favoritos'),
-      ),
+      appBar: AppBar(title: const Text('Meus Favoritos')),
       body: favoritePokemons.isEmpty
           ? const Center(
               child: Text(
@@ -40,7 +38,8 @@ class FavoritesScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => PokemonDetailScreen(pokemon: pokemon),
+                        builder: (context) =>
+                            PokemonDetailScreen(pokemon: pokemon),
                       ),
                     );
                   },
