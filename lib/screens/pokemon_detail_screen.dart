@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/pokemon_model.dart';
 import '../services/api_service.dart';
 import '../providers/favorites_provider.dart';
+import '../utils/type_color_util.dart';
 
 class PokemonDetailScreen extends StatefulWidget {
   final PokemonListing pokemon;
@@ -26,10 +27,12 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(widget.pokemon.name.toUpperCase()),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
-          // O Consumer reconstrói apenas o ícone quando o estado de favoritos muda.
           Consumer<FavoritesProvider>(
             builder: (context, favoritesProvider, child) {
               final isFavorite = favoritesProvider.isFavorite(widget.pokemon);
@@ -49,43 +52,23 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
       body: FutureBuilder<PokemonDetail>(
         future: _pokemonDetailFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Erro: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: Text('Nenhum detalhe encontrado.'));
-          }
+          final detail = snapshot.data;
+          final primaryType = detail?.types.isNotEmpty ?? false
+              ? detail!.types.first
+              : 'normal';
+          final backgroundColor = getColorForType(primaryType);
 
-          final detail = snapshot.data!;
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.network(
-                  detail.imageUrl,
-                  height: 250,
-                  fit: BoxFit.contain,
-                  loadingBuilder: (context, child, progress) {
-                    return progress == null
-                        ? child
-                        : const CircularProgressIndicator();
-                  },
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  '#${detail.id} - ${detail.name.toUpperCase()}',
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                _buildInfoCard(context, detail),
-              ],
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [backgroundColor.withOpacity(0.7), backgroundColor],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: SafeArea(
+              child: _buildBodyContent(snapshot),
             ),
           );
         },
@@ -93,8 +76,61 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
     );
   }
 
+  Widget _buildBodyContent(AsyncSnapshot<PokemonDetail> snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const Center(child: CircularProgressIndicator(color: Colors.white));
+    }
+    if (snapshot.hasError) {
+      return Center(
+          child: Text('Erro: ${snapshot.error}',
+              style: const TextStyle(color: Colors.white)));
+    }
+    if (!snapshot.hasData) {
+      return const Center(
+          child: Text('Nenhum detalhe encontrado.',
+              style: TextStyle(color: Colors.white)));
+    }
+
+    final detail = snapshot.data!;
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.network(
+            detail.imageUrl,
+            height: 250,
+            fit: BoxFit.contain,
+            loadingBuilder: (context, child, progress) {
+              return progress == null
+                  ? child
+                  : const CircularProgressIndicator(color: Colors.white);
+            },
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.error, color: Colors.white, size: 100),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            '#${detail.id} - ${detail.name.toUpperCase()}',
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: [
+                Shadow(blurRadius: 2, color: Colors.black45, offset: Offset(0, 2))
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          _buildInfoCard(context, detail),
+        ],
+      ),
+    );
+  }
+
   Widget _buildInfoCard(BuildContext context, PokemonDetail detail) {
     return Card(
+      color: Colors.white.withOpacity(0.85),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: Padding(
@@ -122,9 +158,13 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87),
           ),
-          Text(value, style: const TextStyle(fontSize: 18)),
+          Text(value,
+              style: const TextStyle(fontSize: 18, color: Colors.black54)),
         ],
       ),
     );
