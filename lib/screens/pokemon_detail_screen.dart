@@ -53,23 +53,29 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
         future: _pokemonDetailFuture,
         builder: (context, snapshot) {
           final detail = snapshot.data;
-          final primaryType = detail?.types.isNotEmpty ?? false
-              ? detail!.types.first
-              : 'normal';
+          final primaryType =
+          detail?.types.isNotEmpty ?? false ? detail!.types.first : 'normal';
           final backgroundColor = getColorForType(primaryType);
 
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [backgroundColor.withOpacity(0.7), backgroundColor],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+          // Usamos uma Stack para colocar o fundo e o conteúdo em camadas
+          return Stack(
+            children: [
+              // Camada 1: O fundo que preenche toda a tela
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [backgroundColor.withOpacity(0.7), backgroundColor],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
               ),
-            ),
-            child: SafeArea(
-              child: _buildBodyContent(snapshot),
-            ),
+              // Camada 2: O conteúdo, dentro de um SafeArea
+              SafeArea(
+                child: _buildBodyContent(snapshot),
+              ),
+            ],
           );
         },
       ),
