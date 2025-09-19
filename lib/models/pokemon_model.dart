@@ -1,7 +1,3 @@
-// lib/models/pokemon_model.dart
-// Define as classes Dart que representam os dados da API.
-// Inclui a lógica para converter JSON em objetos Dart.
-
 class PokemonListing {
   final String name;
   final String url;
@@ -14,7 +10,6 @@ class PokemonListing {
 
   // Extrai o ID do Pokémon da URL para obter a imagem.
   String get imageUrl {
-    // CORREÇÃO: A URL termina com uma barra, então o ID está na penúltima posição.
     final uriParts = url.split('/').where((part) => part.isNotEmpty).toList();
     final id = uriParts.last;
     return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png';

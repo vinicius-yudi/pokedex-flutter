@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Retorna uma cor baseada no tipo do Pokémon.
-///
-/// As cores foram escolhidas para representar bem cada tipo.
 Color getColorForType(String type) {
   switch (type.toLowerCase()) {
     case 'fire':

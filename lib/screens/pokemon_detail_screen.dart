@@ -5,6 +5,7 @@ import '../services/api_service.dart';
 import '../providers/favorites_provider.dart';
 import '../utils/type_color_util.dart';
 
+// Tela que exibe os detalhes de um Pokémon específico.
 class PokemonDetailScreen extends StatefulWidget {
   final PokemonListing pokemon;
 
@@ -16,21 +17,24 @@ class PokemonDetailScreen extends StatefulWidget {
 
 class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
   final ApiService _apiService = ApiService();
+  // Future para armazenar o resultado da chamada da API.
   late Future<PokemonDetail> _pokemonDetailFuture;
 
   @override
   void initState() {
     super.initState();
+    // Inicia a busca pelos detalhes do Pokémon assim que a tela é construída.
     _pokemonDetailFuture = _apiService.fetchPokemonDetails(widget.pokemon.url);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Permite que o corpo da tela se estenda por trás da AppBar, criando um efeito de sobreposição.
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(widget.pokemon.name.toUpperCase()),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent, // AppBar transparente
         elevation: 0,
         actions: [
           Consumer<FavoritesProvider>(
@@ -42,6 +46,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
                   color: isFavorite ? Colors.yellow : Colors.white,
                 ),
                 onPressed: () {
+                  // Alterna o status de favorito ao ser pressionado.
                   favoritesProvider.toggleFavorite(widget.pokemon);
                 },
               );
@@ -49,18 +54,20 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
           ),
         ],
       ),
+      // FutureBuilder constrói a UI com base no estado da requisição (carregando, erro, sucesso).
       body: FutureBuilder<PokemonDetail>(
         future: _pokemonDetailFuture,
         builder: (context, snapshot) {
           final detail = snapshot.data;
+          // Determina a cor de fundo com base no primeiro tipo do Pokémon.
           final primaryType =
-          detail?.types.isNotEmpty ?? false ? detail!.types.first : 'normal';
+              detail?.types.isNotEmpty ?? false ? detail!.types.first : 'normal';
           final backgroundColor = getColorForType(primaryType);
 
-          // Usamos uma Stack para colocar o fundo e o conteúdo em camadas
+          // Stack é usado para sobrepor widgets. Aqui, o conteúdo fica sobre o fundo gradiente.
           return Stack(
             children: [
-              // Camada 1: O fundo que preenche toda a tela
+              // Camada 1: O fundo com gradiente que preenche toda a tela.
               AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
                 decoration: BoxDecoration(
@@ -71,7 +78,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
                   ),
                 ),
               ),
-              // Camada 2: O conteúdo, dentro de um SafeArea
+              // Camada 2: O conteúdo, dentro de um SafeArea para evitar áreas do sistema (notch, etc.).
               SafeArea(
                 child: _buildBodyContent(snapshot),
               ),
@@ -82,15 +89,19 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
     );
   }
 
+  /// Constrói o conteúdo principal da tela com base no estado do [AsyncSnapshot].
   Widget _buildBodyContent(AsyncSnapshot<PokemonDetail> snapshot) {
+    // Exibe um indicador de progresso enquanto os dados estão sendo carregados.
     if (snapshot.connectionState == ConnectionState.waiting) {
       return const Center(child: CircularProgressIndicator(color: Colors.white));
     }
+    // Exibe uma mensagem de erro se a requisição falhar.
     if (snapshot.hasError) {
       return Center(
           child: Text('Erro: ${snapshot.error}',
               style: const TextStyle(color: Colors.white)));
     }
+    // Exibe uma mensagem se nenhum dado for encontrado.
     if (!snapshot.hasData) {
       return const Center(
           child: Text('Nenhum detalhe encontrado.',
@@ -112,6 +123,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
                   ? child
                   : const CircularProgressIndicator(color: Colors.white);
             },
+            // Mostra um ícone de erro se a imagem não puder ser carregada.
             errorBuilder: (context, error, stackTrace) =>
                 const Icon(Icons.error, color: Colors.white, size: 100),
           ),
@@ -134,6 +146,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
     );
   }
 
+  /// Constrói o card com as informações detalhadas do Pokémon (altura, peso, etc.).
   Widget _buildInfoCard(BuildContext context, PokemonDetail detail) {
     return Card(
       color: Colors.white.withOpacity(0.85),
@@ -156,6 +169,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
     );
   }
 
+  /// Constrói uma linha padronizada para exibir uma informação (label e valor).
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),

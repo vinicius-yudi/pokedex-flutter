@@ -5,6 +5,8 @@ import '../widgets/pokemon_card.dart';
 import 'pokemon_detail_screen.dart';
 import 'favorites_screen.dart';
 
+// Tela principal que exibe a lista de Pokémon e permite busca e navegação
+
 class PokedexScreen extends StatefulWidget {
   const PokedexScreen({super.key});
 
@@ -13,8 +15,8 @@ class PokedexScreen extends StatefulWidget {
 }
 
 class _PokedexScreenState extends State<PokedexScreen> {
-  final ApiService _apiService = ApiService();
-  final TextEditingController _searchController = TextEditingController();
+  final ApiService _apiService = ApiService(); // Serviço para buscar dados da API
+  final TextEditingController _searchController = TextEditingController(); // Controla o campo de busca
   List<PokemonListing> _pokemonList = [];
   int _offset = 0;
   bool _isLoading = false;
@@ -24,9 +26,10 @@ class _PokedexScreenState extends State<PokedexScreen> {
   @override
   void initState() {
     super.initState();
-    _loadInitialPokemon();
+    _loadInitialPokemon(); // Carrega os primeiros Pokémon ao iniciar
   }
 
+  // Busca a lista inicial de Pokémon
   Future<void> _loadInitialPokemon() async {
     setState(() {
       _isLoading = true;
@@ -47,6 +50,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
     }
   }
 
+  // Carrega mais Pokémon para paginação
   Future<void> _loadMorePokemon() async {
     if (_isLoading) return;
     setState(() {
@@ -67,6 +71,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
     }
   }
 
+  // Busca um Pokémon pelo nome ou ID
   void _searchPokemon() async {
     final query = _searchController.text.trim();
     if (query.isEmpty) return;
@@ -113,6 +118,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
       ),
       body: Column(
         children: [
+          // Campo de busca
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
@@ -152,6 +158,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
     );
   }
 
+  // Constrói o conteúdo principal: lista ou mensagens de erro/carregando
   Widget _buildContent() {
     if (_isLoading && _pokemonList.isEmpty) {
       return const Center(child: CircularProgressIndicator());
@@ -182,6 +189,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
             },
           );
         } else {
+          // Botão para carregar mais Pokémon
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: _isLoading
