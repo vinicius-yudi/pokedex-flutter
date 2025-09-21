@@ -5,6 +5,13 @@ Um aplicativo de Pokédex completo e multiplataforma desenvolvido com Flutter. E
 ## Video de Demostração
 https://youtu.be/9aKvjlBkkrk
 
+## Integrantes
+* Gabriel Ribeiro Estefanski
+* Giordano Diniz Serafini
+* Julia Tatim Castro
+* Victor Gabriel Eidt Bragagnolo
+* Vinicius Yudi Sumiyoshi Alves
+
 ## Funcionalidades
 
 * Lista de Pokémon: Navegue por uma lista de Pokémon carregada dinamicamente da PokéAPI.
