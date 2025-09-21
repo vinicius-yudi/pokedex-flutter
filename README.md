@@ -2,6 +2,9 @@
 
 Um aplicativo de Pokédex completo e multiplataforma desenvolvido com Flutter. Explore, pesquise e gerencie seus Pokémon favoritos com uma interface bonita e responsiva.
 
+## Video de Demostração
+https://youtu.be/9aKvjlBkkrk
+
 ## Funcionalidades
 
 * Lista de Pokémon: Navegue por uma lista de Pokémon carregada dinamicamente da PokéAPI.
